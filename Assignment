@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Designer</title>
+    <style>
+        /* Setting the font family and layout for the body */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        /* Styling for the navbar/header section */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f8f8f8;
+        }
+        /* Styling for the title in the navbar */
+        .navbar-title {
+            font-size: 16px;
+        }
+        /* Styling for the save button in the navbar */
+        .navbar-button {
+            padding: 5px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        /* Hover effect for the save button */
+        .navbar-button:hover {
+            background-color: #e0e0e0;
+        }
+        /* Layout for the workspace containing the tools and form area */
+        .workspace {
+            display: flex;
+            flex: 1;
+        }
+        /* Styling for the sidebar/tools section */
+        .tools {
+            width: 220px;
+            border-right: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        /* Styling for the tools title */
+        .tools-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #444;
+        }
+        /* Styling for individual tool items */
+        .tool-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        /* Hover effect for tool items */
+        .tool-item:hover {
+            background-color: #f0f0f0;
+            border-color: #bbb;
+        }
+        /* Styling for the form area */
+        .form-area {
+            flex: 1;
+            padding: 20px;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        /* Styling for the form container */
+        .form-wrapper {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        /* Styling for each form group */
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        /* Styling for form labels */
+        .form-group label {
+            flex: 1;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        /* Styling for form inputs, selects, and textareas */
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            flex: 4;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fafafa;
+        }
+        /* Styling for remove buttons */
+        .form-group button {
+            margin-left: 10px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+        }
+    </style>
+    <!-- Adding Dragula library for drag-and-drop functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.3/dragula.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.3/dragula.min.css" />
+</head>
+<body>
+    <div class="navbar">
+        <!-- Navbar with title and save button -->
+        <div class="navbar-title">Form Designer</div>
+        <button class="navbar-button" onclick="saveForm()">Save</button>
+    </div>
+    <div class="workspace">
+        <div class="tools">
+            <!-- Sidebar with tools title and tool items -->
+            <div class="tools-title">Components</div>
+            <div class="tool-item" onclick="addField('input')">
+                <span>Input</span>
+                <span>+</span>
+            </div>
+            <div class="tool-item" onclick="addField('select')">
+                <span>Select</span>
+                <span>+</span>
+            </div>
+            <div class="tool-item" onclick="addField('textarea')">
+                <span>Textarea</span>
+                <span>+</span>
+            </div>
+        </div>
+        <div class="form-area">
+            <div class="form-wrapper" id="formContainer">
+                <!-- Initial form elements with unique IDs -->
+                <div class="form-group" data-id="c0ac49c5-871e-4c72-a878-251de465e6b4">
+                    <label contenteditable="true">Sample Label</label>
+                    <input type="text" placeholder="Sample placeholder">
+                    <button onclick="removeField(this)">🗑️</button>
+                </div>
+                <div class="form-group" data-id="146e69c2-1630-4a27-9d0b-f09e463a66e4">
+                    <label contenteditable="true">Select</label>
+                    <select>
+                        <option>Sample Option</option>
+                        <option>Sample Option</option>
+                        <option>Sample Option</option>
+                    </select>
+                    <button onclick="removeField(this)">🗑️</button>
+                </div>
+                <div class="form-group" data-id="45002ecf-85cf-4852-bc46-529f94a758f5">
+                    <label contenteditable="true">Text Area</label>
+                    <input type="text" placeholder="Sample Placeholder">
+                    <button onclick="removeField(this)">🗑️</button>
+                </div>
+                <div class="form-group" data-id="680cff8d-c7f9-40be-8767-e3d6ba420952">
+                    <label contenteditable="true">Sample Label</label>
+                    <textarea placeholder="Sample Placeholder"></textarea>
+                    <button onclick="removeField(this)">🗑️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize drag-and-drop functionality on page load
+        document.addEventListener("DOMContentLoaded", function() {
+            dragula([document.getElementById('formContainer')]);
+        });
+
+        // Function to save the form data and log it as JSON
+        function saveForm() {
+            const formContainer = document.getElementById('formContainer');
+            const formData = [];
+            formContainer.querySelectorAll('.form-group').forEach(group => {
+                const id = group.getAttribute('data-id');
+                const label = group.querySelector('label').innerText;
+                const type = group.querySelector('input') ? 'input' : (group.querySelector('select') ? 'select' : 'textarea');
+                const placeholder = group.querySelector('input, textarea') ? group.querySelector('input, textarea').placeholder : null;
+                const options = type === 'select' ? Array.from(group.querySelectorAll('option')).map(option => option.innerText) : null;
+
+                formData.push({
+                    id,
+                    type,
+                    label,
+                    placeholder,
+                    options
+                });
+            });
+
+            console.log(JSON.stringify(formData, null, 2));
+        }
+
+        // Function to add a new form field
+        function addField(type) {
+            const formContainer = document.getElementById('formContainer');
+            const id = generateUniqueId();
+            let fieldHtml = '';
+           
+            if (type === 'input') {
+                fieldHtml = `
+                    <div class="form-group" data-id="${id}">
+                        <label contenteditable="true">Sample Label</label>
+                        <input type="text" placeholder="Sample placeholder">
+                        <button onclick="removeField(this)">🗑️</button>
+                    </div>
+                `;
+            } else if (type === 'select') {
+                fieldHtml = `
+                    <div class="form-group" data-id="${id}">
+                        <label contenteditable="true">Sample Label</label>
+                        <select>
+                            <option>Sample Option</option>
+                            <option>Sample Option</option>
+                            <option>Sample Option</option>
+                        </select>
+                        <button onclick="removeField(this)">🗑️</button>
+                    </div>
+                `;
+            } else if (type === 'textarea') {
+                fieldHtml = `
+                    <div class="form-group" data-id="${id}">
+                        <label contenteditable="true">Text Area</label>
+                        <textarea placeholder="Sample placeholder"></textarea>
+                        <button onclick="removeField(this)">🗑️</button>
+                    </div>
+                `;
+            }
+
+            formContainer.insertAdjacentHTML('beforeend', fieldHtml);
+        }
+
+        // Function to remove a form field
+        function removeField(button) {
+            button.parentElement.remove();
+        }
+
+        // Function to generate a unique ID
+        function generateUniqueId() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+    </script>
+</body>
+</html>
